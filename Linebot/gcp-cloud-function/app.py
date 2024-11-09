@@ -1,22 +1,21 @@
+import functions_framework
 import os
 import json
 from services.line_service import LineService
-from services.cloud.aws.storage_service import StorageService
+from services.cloud.gcp.storage_service import StorageService
 from services.llama_service import LlamaService
 
-def handler(event, context):
+@functions_framework.http
+def answer(request):
     # ライン署名情報を取得
-    signature = event['headers'].get('x-line-signature')
-    body = event['body']
+    signature = request.headers.get('x-line-signature')
+    body = request.get_data(as_text=True)
 
     # ライン署名の検証
     line_service = LineService(os.getenv('LINE_CHANNEL_SECRET'), os.getenv('LINE_ACCESS_TOKEN'))
     if not line_service.validate_signature(body, signature):
         print('署名検証に失敗しました。')
-        return {
-            'statusCode': 401,
-            'body': json.dumps({'message': 'Unauthorized'})
-        }
+        return jsonify({'message': 'Unauthorized'}), 401
 
     # ラインイベント、ユーザーのメッセージを取得
     line_event = json.loads(body)['events'][0]
@@ -26,14 +25,15 @@ def handler(event, context):
     ai_response = ""
     try:
         # Google Cloud Storageからindexを取得
-        aws_access_key_id = os.getenv('ACCESS_KEY_ID')
-        aws_secret_access_key = os.getenv('SECRET_ACCESS_KEY')
-        storage_service = StorageService(
-            aws_access_key_id,
-            aws_secret_access_key)
-        bucket_name = os.getenv('BUCKET_NAME')
-        file_name = os.getenv('QA_EMBEDDINGS_FILE_NAME')
+        storage_service = StorageService()
+        bucket_name = os.getenv('QA_BUCKET_NAME')
+        file_name = os.getenv('QA_EMBEDDING_FILE_NAME')
         embeddings = storage_service.read_json_from_file(bucket_name, "qa", file_name)
+        
+        # 質問検索
+        llamaService = LlamaService()
+        llamaService.add_embeddings(embeddings)
+        ai_response = llamaService.find_best_answer(user_message)
         
         # 質問検索
         llamaService = LlamaService()
@@ -42,22 +42,13 @@ def handler(event, context):
     except Exception as e:
         print('Open Ai Api エラー')
         print(f'Error occurred: {e}')
-        return {
-            'statusCode': 500,
-            'body': json.dumps(str(e))
-        }
+        return json.dumps(e), 500
 
     # 問い合わせ情報をラインに返信
     try:
         line_service.send_reply_to_line(line_event['replyToken'], ai_response)
-        return {
-            'statusCode': 200,
-            'body': json.dumps(ai_response)
-        }
+        return json.dumps(ai_response), 200
     except Exception as e:
         print('Line Api エラー')
         print(f'Error occurred: {e}')
-        return {
-            'statusCode': 500,
-            'body': json.dumps(str(e))
-        }
+        return json.dumps(e), 500
