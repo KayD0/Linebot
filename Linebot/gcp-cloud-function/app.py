@@ -15,7 +15,7 @@ def answer(request):
     line_service = LineService(os.getenv('LINE_CHANNEL_SECRET'), os.getenv('LINE_ACCESS_TOKEN'))
     if not line_service.validate_signature(body, signature):
         print('署名検証に失敗しました。')
-        return jsonify({'message': 'Unauthorized'}), 401
+        return json.dumps({'message': 'Unauthorized'}), 401
 
     # ラインイベント、ユーザーのメッセージを取得
     line_event = json.loads(body)['events'][0]
