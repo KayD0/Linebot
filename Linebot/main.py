@@ -34,11 +34,6 @@ def answer(request):
         llamaService = LlamaService()
         llamaService.add_embeddings(embeddings)
         ai_response = llamaService.find_best_answer(user_message)
-        
-        # 質問検索
-        llamaService = LlamaService()
-        llamaService.add_embeddings(embeddings)
-        ai_response = llamaService.find_best_answer(user_message)
     except Exception as e:
         print('Open Ai Api エラー')
         print(f'Error occurred: {e}')
