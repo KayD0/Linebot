@@ -2,8 +2,8 @@ import functions_framework
 import os
 import json
 from services.line_service import LineService
-from services.cloud.gcp.storage_service import StorageService
 from services.llama_service import LlamaService
+from services.cloud.gcp.storage_service import StorageService
 
 @functions_framework.http
 def answer(request):
@@ -26,8 +26,8 @@ def answer(request):
     try:
         # Google Cloud Storageからindexを取得
         storage_service = StorageService()
-        bucket_name = os.getenv('QA_BUCKET_NAME')
-        file_name = os.getenv('QA_EMBEDDING_FILE_NAME')
+        bucket_name = os.getenv('BUCKET_NAME')
+        file_name = os.getenv('QA_EMBEDDINGS_FILE_NAME')
         embeddings = storage_service.read_json_from_file(bucket_name, "qa", file_name)
         
         # 質問検索

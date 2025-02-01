@@ -1,0 +1,6 @@
+awslambdaric # This is mandatory
+# Please add any Python liblary here
+openai==1.*
+scipy==1.*
+boto3==1.*
+botocore==1.*
