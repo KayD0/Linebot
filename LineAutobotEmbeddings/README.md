@@ -1,11 +1,11 @@
 # LineAutobotEmbeddings
 
-このプロジェクトは、LINEボットから受信したQAデータをOpenAIのAPIを使用して埋め込みベクトルに変換し、Google Cloud Storageに保存するためのPythonアプリケーションです。
+このプロジェクトは、受信元がLINEボットだけではなく、他のデータソースから受信したQAデータをOpenAIのAPIを使用して埋め込みベクトルに変換し、Google Cloud Storageに保存するためのPythonアプリケーションです。
 
 ## 概要
 
 このプロジェクトは、以下の主要な機能を提供します:
-- LINE Messaging APIから受信したQAデータの解析
+- 受信したQAデータの解析（LINE Messaging APIや他のデータソースから）
 - OpenAIのAPIを使用して埋め込みベクトルを生成
 - 生成した埋め込みベクトルをGoogle Cloud Storageに保存
 
@@ -48,8 +48,18 @@
 
 ## 使用方法
 
-LINEボットがメッセージを受信すると、このプロジェクトがイベントを処理し、QAデータを埋め込みベクトルに変換してGoogle Cloud Storageに保存します。
+メッセージが受信されると、このプロジェクトがイベントを処理し、QAデータを埋め込みベクトルに変換してGoogle Cloud Storageに保存します。受信元はLINEボットだけではなく、他のデータソースもサポートしています。
 
-## ライセンス
+## 解析するJSONフォーマット
 
-このプロジェクトはMITライセンスの下でライセンスされています。
+プロジェクトが受け入れるJSONフォーマットは以下の通りです:
+```json
+{
+    "qaData": [
+        {
+            "question": "質問のテキスト",
+            "answer": "回答のテキスト"
+        },
+        ...
+    ]
+}
