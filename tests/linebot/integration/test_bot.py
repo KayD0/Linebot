@@ -1,7 +1,11 @@
+import os
+import sys
+sys.path.append(os.getcwd())
+
 from dotenv import load_dotenv
 load_dotenv()
-from ...services.llama_service import LlamaService
-from ...services.file_service import FileService
+from Linebot.services.llama_service import LlamaService
+from Linebot.services.file_service import FileService
 
 import unittest
 
