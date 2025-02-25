@@ -7,3 +7,5 @@ scipy==1.*
 requests==2.*
 # 大規模言語モデル（LLM）を使用したデータインデックス作成と検索
 llama-index==0.*
+openai==1.*
+scipy==1.*

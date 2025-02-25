@@ -13,15 +13,19 @@ class OpenAiService:
         embeddings = []
 
         for qa_pair in qa_data:
-            response = await self.openai.embeddings.create(
+            question_response = await self.openai.embeddings.create(
                 model="text-embedding-ada-002",
                 input=qa_pair['question']
             )
-
+            answer_response = await self.openai.embeddings.create(
+                model="text-embedding-ada-002",
+                input=qa_pair['answer']
+            )
             embeddings.append({
                 'question': qa_pair['question'],
                 'answer': qa_pair['answer'],
-                'embedding': response.data[0].embedding
+                'question_embedding': question_response.data[0].embedding,
+                'answer_embedding': answer_response.data[0].embedding
             })
 
         return embeddings
