@@ -11,7 +11,7 @@ import unittest
 
 class Test_TestFindAnswer(unittest.TestCase):
     def test_find_answer1(self):
-        user_message = "確定拠出年金(国民年金基金連合会)の法人型から個人型への変更について教えてください。"
+        user_message = "確定拠出年金の法人型"
         fileService = FileService()
         file_path = "tests\datas"
         file_name = "qaemb.json"
