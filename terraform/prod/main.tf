@@ -7,10 +7,6 @@ terraform {
   }
 }
 
-resource "random_id" "default" {
-  byte_length = 8
-}
-
 resource "google_storage_bucket" "default" {
   name                        = "${var.environment_prefix}-${var.app_name_prefix}-storage" # Every bucket name must be globally unique
   location                    = "ASIA-NORTHEAST1"
