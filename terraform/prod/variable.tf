@@ -9,3 +9,11 @@ variable "app_name_prefix" {
   description = "アプリケーションメイプレフィックス"
   default     = "linebot"
 }
+
+variable "labels" {
+  type = map(string)
+  default = {
+    environment = "prod-linebot"
+    managed_by  = "terraform"
+  }
+}

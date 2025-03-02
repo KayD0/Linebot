@@ -1,3 +1,4 @@
+# 必要なプロバイダーを指定します
 terraform {
   required_providers {
     google = {
@@ -7,59 +8,72 @@ terraform {
   }
 }
 
+# 組織IDとしてランダムなIDを生成します
+resource "random_id" "org_id" {
+  byte_length = 16
+}
+
+# Google Cloud Storageバケットを作成します
 resource "google_storage_bucket" "default" {
-  name                        = "${var.environment_prefix}-${var.app_name_prefix}-storage" # Every bucket name must be globally unique
-  location                    = "ASIA-NORTHEAST1"
+  name     = "${var.environment_prefix}-${var.app_name_prefix}-storage" # バケット名はグローバルに一意である必要があります
+  location = "ASIA-NORTHEAST1"
   uniform_bucket_level_access = true
+  labels   = var.labels
 }
 
-data "archive_file" "default" {
-  type        = "zip"
-  output_path = "/tmp/function-source.zip"
-  source_dir  = "functions/linebot/"
-}
+# zipアーカイブをストレージバケットにアップロードします
 resource "google_storage_bucket_object" "object" {
-  name   = "function-source.zip"
+  name   = "functions.zip"
   bucket = google_storage_bucket.default.name
-  source = data.archive_file.default.output_path # Add path to the zipped function source code
+  source = "./functions.zip" # zipアーカイブのパスを指定
 }
 
-resource "google_cloudfunctions2_function" "default" {
+# bot用のCloud Functionを作成します
+resource "google_cloudfunctions2_function" "bot" {
   name        = "${var.environment_prefix}-${var.app_name_prefix}-bot"
   location    = "asia-northeast1"
   description = ""
 
   build_config {
     runtime     = "python312"
-    entry_point = "bot" # Set the entry point
+    entry_point = "bot" # エントリーポイントを設定
     source {
       storage_source {
         bucket = google_storage_bucket.default.name
         object = google_storage_bucket_object.object.name
       }
     }
+    environment_variables = {
+      GOOGLE_FUNCTION_SOURCE = "bot.py"
+    }
   }
 
   service_config {
     max_instance_count = 1
-    available_memory   = "256M"
+    available_memory   = "512M"
     timeout_seconds    = 60
   }
+
+  labels   = var.labels
 }
 
-resource "google_cloudfunctions2_function" "default" {
+# embeddings用のCloud Functionを作成します
+resource "google_cloudfunctions2_function" "embeddings" {
   name        = "${var.environment_prefix}-${var.app_name_prefix}-embeddings"
   location    = "asia-northeast1"
   description = ""
 
   build_config {
     runtime     = "python312"
-    entry_point = "embeddings" # Set the entry point
+    entry_point = "embeddings" # エントリーポイントを設定
     source {
       storage_source {
         bucket = google_storage_bucket.default.name
         object = google_storage_bucket_object.object.name
       }
+    }
+    environment_variables = {
+      GOOGLE_FUNCTION_SOURCE = "embeddings.py"
     }
   }
 
@@ -68,21 +82,27 @@ resource "google_cloudfunctions2_function" "default" {
     available_memory   = "256M"
     timeout_seconds    = 60
   }
+
+  labels   = var.labels
 }
 
-resource "google_cloudfunctions2_function" "default" {
+# investigator用のCloud Functionを作成します
+resource "google_cloudfunctions2_function" "investigator" {
   name        = "${var.environment_prefix}-${var.app_name_prefix}-investigator"
   location    = "asia-northeast1"
   description = ""
 
   build_config {
     runtime     = "python312"
-    entry_point = "investigator" # Set the entry point
+    entry_point = "investigator" # エントリーポイントを設定
     source {
       storage_source {
         bucket = google_storage_bucket.default.name
         object = google_storage_bucket_object.object.name
       }
+    }
+    environment_variables = {
+      GOOGLE_FUNCTION_SOURCE = "investigator.py"
     }
   }
 
@@ -91,15 +111,15 @@ resource "google_cloudfunctions2_function" "default" {
     available_memory   = "256M"
     timeout_seconds    = 60
   }
+
+  labels   = var.labels
 }
 
-resource "google_cloud_run_service_iam_member" "member" {
-  location = google_cloudfunctions2_function.default.location
-  service  = google_cloudfunctions2_function.default.name
+# IAMポリシーを設定して、Cloud Functionへの公開アクセスを許可します
+# ただし、`google_cloudfunctions2_function.default` は存在しないため、正しいリソース名を指定する必要があります
+resource "google_cloud_run_service_iam_member" "embeddings_member" {
+  location = google_cloudfunctions2_function.embeddings.location # botのロケーションを使用
+  service  = google_cloudfunctions2_function.embeddings.name # botの名前を使用
   role     = "roles/run.invoker"
   member   = "allUsers"
-}
-
-output "function_uri" {
-  value = google_cloudfunctions2_function.default.service_config[0].uri
 }
