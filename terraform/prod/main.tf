@@ -62,10 +62,10 @@ resource "google_cloudfunctions2_function" "bot" {
     timeout_seconds    = 60
     environment_variables = {
       BUCKET_NAME = google_storage_bucket.default.name       
-      QA_EMBEDDINGS_FILE_NAME = "qaemb.json"      
-      LINE_CHANNEL_SECRET = "LINE_CHANNEL_SECRET"
-      LINE_ACCESS_TOKEN = "LINE_ACCESS_TOKEN"
-      OPENAI_API_KEY = "OPENAI_API_KEY"
+      QA_EMBEDDINGS_FILE_NAME = "${var.embeddings_file_name}"      
+      LINE_CHANNEL_SECRET = "${var.line_channel_secret}"
+      LINE_ACCESS_TOKEN = "${var.line_access_token}"
+      OPENAI_API_KEY = "${var.openai_api_key}"
     }
   }
 
@@ -98,8 +98,8 @@ resource "google_cloudfunctions2_function" "embeddings" {
     timeout_seconds    = 60
     environment_variables = {
       BUCKET_NAME = google_storage_bucket.default.name
-      QA_EMBEDDINGS_FILE_NAME = "qaemb.json"
-      OPENAI_API_KEY = "OPENAI_API_KEY"
+      QA_EMBEDDINGS_FILE_NAME = "${var.embeddings_file_name}"      
+      OPENAI_API_KEY = "${var.openai_api_key}"
     }
   }
 
