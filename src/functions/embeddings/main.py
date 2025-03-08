@@ -2,10 +2,10 @@ import functions_framework
 import json
 import os
 from services.openai_service import OpenAiService
-from services.cloud.gcp.storage_service import StorageService
+from services.storage_service import StorageService
 
 @functions_framework.http
-def embeddings(request):
+def run(request):
     # リクエストボディからQAデータを取得
     try:
         body = json.loads(request.get_data(as_text=True))

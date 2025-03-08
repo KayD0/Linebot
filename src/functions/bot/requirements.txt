@@ -1,0 +1,6 @@
+﻿functions-framework==3.*
+google-cloud-storage==2.*
+scipy==1.*
+requests==2.*
+llama-index==0.*
+scipy==1.*

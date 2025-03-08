@@ -28,6 +28,12 @@
     LINE_CHANNEL_SECRET=your_line_channel_secret
     LINE_ACCESS_TOKEN=your_line_access_token
     ```
+5. 以下は各関数の実行方法です
+  ```
+  functions-framework --target=bot
+  functions-framework --target=embeddings
+  functions-framework --target=investigator
+  ```
 
 ## デプロイ方法 (GCP)
 

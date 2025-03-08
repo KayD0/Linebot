@@ -3,10 +3,10 @@ import os
 import json
 from services.line_service import LineService
 from services.llama_service import LlamaService
-from services.cloud.gcp.storage_service import StorageService
+from services.storage_service import StorageService
 
 @functions_framework.http
-def answer(request):
+def run(request):
     # ライン署名情報を取得
     signature = request.headers.get('x-line-signature')
     body = request.get_data(as_text=True)

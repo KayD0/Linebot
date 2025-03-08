@@ -1,13 +1,11 @@
 # ソースディレクトリとZIPファイルの出力先を指定
-$sourceDir = "."
-$destinationZip = "functions.zip"
+$sourceDir = "./bot"
+$destinationZip = "bot.zip"
 
 # ZIP化する項目のリストを定義
 $itemsToInclude = @(
     "services",
-    "bot.py",
-    "embeddings.py",
-    "investigator.py",
+    "main.py",
     "requirements.txt"
 )
 

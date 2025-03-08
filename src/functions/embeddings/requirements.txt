@@ -1,0 +1,4 @@
+﻿functions-framework==3.*
+google-cloud-storage==2.*
+requests==2.*
+openai==1.*

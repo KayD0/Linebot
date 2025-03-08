@@ -11,9 +11,31 @@ variable "app_name_prefix" {
 }
 
 variable "labels" {
-  type = map(string)
-  default = {
-    environment = "prod-linebot"
-    managed_by  = "terraform"
-  }
+  type        = string
+  description = "ラベル"
+  default     = "stg-linebot"
+}
+
+variable "project_id" {
+  type        = string
+  description = "プロジェクトID"
+  default     = "freelance-federation"
+}
+
+variable "location" {
+  type        = string
+  description = "リージョン"
+  default     = "asia-northeast1"
+}
+
+variable "runtime" {
+  type        = string
+  description = "ランタイム"
+  default     = "python312"
+}
+
+variable "entry_point" {
+  type        = string
+  description = "エントリーポイント"
+  default     = "run"
 }
