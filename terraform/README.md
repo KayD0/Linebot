@@ -10,8 +10,12 @@
 
 ## 前提条件
 
-1. Terraformがインストールされていること。
-2. 必要なクラウドプロバイダーの認証情報が設定されていること。
+1. Google Cloud でプロジェクトを作成してあること
+2. Google Cloud でプロジェクトで作成したプロジェクトに必要なAPIを有効化していること
+  -  以下有効化必要なAPI
+    - Cloud Functions API
+    - Compute Engine API
+3. Google Cloud Shellで実行すること
 
 ## 使用方法
 
@@ -20,16 +24,16 @@
     git clone https://github.com/KayD0/Linebot.git
     cd Linebot/terraform
     ```
+2. Google Cloud Shellにアプロード
+   - zipper_{app}.ps1を使ってプロジェクトをzip化する
+     - functions/bot
+     - functions/embeddings
+   - zipかしたファイルを以下に格納し、Google Cloud Shellにアップロード
+     - terraform/{env}
 
-2. Terraformを初期化します:
+3. Terraformを初期化します:
     ```sh
     terraform init
-    ```
-
-3. 変数ファイルを作成し、必要な値を設定します。例:
-    ```sh
-    cp terraform.tfvars.example terraform.tfvars
-    vi terraform.tfvars
     ```
 
 4. Terraformプランを作成します:
@@ -44,7 +48,6 @@
 
 ## 注意事項
 
-- 事前にクラウドプロバイダーの認証情報を設定しておく必要があります。
 - 実行前に設定内容を十分に確認してください。
 
 ## ライセンス
