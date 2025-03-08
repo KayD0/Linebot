@@ -10,8 +10,8 @@
 
 ## 前提条件
 
-1. Google Cloud でプロジェクトを作成してあること
-2. Google Cloud でプロジェクトで作成したプロジェクトに必要なAPIを有効化していること
+1. Google Cloudでプロジェクトを作成してあること
+2. Google Cloudで作成したプロジェクトに必要なAPIを有効化していること
   -  以下有効化必要なAPI
     - Cloud Functions API
     - Compute Engine API
@@ -25,11 +25,11 @@
     cd Linebot/terraform
     ```
 2. Google Cloud Shellにアプロード
-   - zipper_{app}.ps1を使ってプロジェクトをzip化する
-     - functions/bot
-     - functions/embeddings
-   - zipかしたファイルを以下に格納し、Google Cloud Shellにアップロード
-     - terraform/{env}
+  - zipper_{app}.ps1を使ってプロジェクトをzip化する
+    - functions/bot
+    - functions/embeddings
+  - zip化したファイルを以下に格納し、Google Cloud Shellにアップロード
+    - terraform/{env}
 
 3. Terraformを初期化します:
     ```sh
