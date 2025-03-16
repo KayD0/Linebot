@@ -1,7 +1,8 @@
-from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, StorageContext, PromptTemplate
+from llama_index.core import VectorStoreIndex, StorageContext, PromptTemplate
 from llama_index.core.vector_stores import SimpleVectorStore
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.core.schema import Document
+from llama_index.core.retrievers import VectorIndexRetriever
 
 class LlamaService:
     def __init__(self):
@@ -79,9 +80,12 @@ class LlamaService:
         docs = []
         for item in embeddings:
             doc = Document(
-                text=item['answer'],
-                extra_info={'question': item['question']},
-                embedding=item['embedding']
+                text=item['question'],
+                extra_info={
+                    'question': item['question'],
+                    'answer': item['answer']
+                },
+                embedding=item['question_embedding']
             )
             docs.append(doc)
         
@@ -101,7 +105,7 @@ class LlamaService:
     :param similarity_threshold: 類似度の閾値（デフォルト: 0.85）
     :return: 最適な回答または規定のメッセージ
     """
-    def find_best_answer(self, user_message, similarity_threshold=0.85):
+    def generate_answer(self, user_message, similarity_threshold=0.85):
         # クエリエンジンを初期化（上位1件の結果を取得）
         query_engine = self.index.as_query_engine(
             text_qa_template= self.qa_template,
@@ -118,3 +122,21 @@ class LlamaService:
             return response.response
         else:
             return "当連盟以外の質問については回答することはできません。"
+
+    """
+    ユーザーの質問に基づき、ベクトル検索で関連度の高い回答を取得する
+    :param user_message: ユーザーからの質問文（自然言語テキスト）
+    :return: List[NodeWithScore] スコア付きの検索結果ノードリスト。各ノード包含要素：
+             - node.metadata['question']: 登録済み質問文
+             - node.metadata['answer']: 対応する回答文
+             - score: 質問間の類似度スコア（0-1）
+    """
+    def find_answer(self, user_message):
+        retriever = VectorIndexRetriever(
+            index=self.index,
+            similarity_top_k=1  # 類似度上位3件を取得
+        )
+        
+        # クエリに基づいて関連するドキュメントを取得
+        response = retriever.retrieve(user_message)
+        return response
