@@ -139,4 +139,8 @@ class LlamaService:
         
         # クエリに基づいて関連するドキュメントを取得
         response = retriever.retrieve(user_message)
-        return response
+        if response:
+            return response[0]  # 最も関連性の高いノードを返す
+            
+        # 結果が空の場合はNoneを返す
+        return None
