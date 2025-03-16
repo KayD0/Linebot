@@ -47,7 +47,7 @@ class StorageService:
             
             # Convert data to JSON string and upload it
             blob.upload_from_string(
-                data=json.dumps(data),
+                data=json.dumps(data, ensure_ascii=False).encode('utf-8'),
                 content_type='application/json'
             )
             print(f"File {file_name} written to {bucket_name}/{full_path}.")
