@@ -11,7 +11,7 @@
 
 1. Google Cloudでプロジェクトを作成してあること
 2. Google Cloudで作成したプロジェクトに必要なAPIを有効化していること
-  -  以下有効化必要なAPI
+  - 以下有効化必要なAPI
     - Cloud Functions API
     - Compute Engine API
 3. Google Cloud Shellで実行すること
