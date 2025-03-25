@@ -74,6 +74,19 @@ resource "google_cloudfunctions2_function" "bot" {
   }
 }
 
+# パブリックアクセスを許可するIAM設定
+resource "google_cloud_run_service_iam_member" "public_access" {
+  project  = var.project_id
+  location = google_cloudfunctions2_function.bot.location
+  service  = google_cloudfunctions2_function.bot.name
+  role     = "roles/run.invoker"
+  member   = "allUsers"
+
+  depends_on = [
+    google_cloudfunctions2_function.bot
+  ]
+}
+
 # embeddings用のCloud Functionを作成します
 resource "google_cloudfunctions2_function" "embeddings" {
   name        = "${var.environment_prefix}-${var.app_name_prefix}-embeddings"
