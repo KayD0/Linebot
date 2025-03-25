@@ -33,7 +33,7 @@ def run(request):
         # 質問検索
         llamaService = LlamaService()
         llamaService.add_embeddings(embeddings)
-        ai_response = llamaService.find_best_answer(user_message)
+        ai_response = llamaService.find_answer(user_message)
     except Exception as e:
         print('Open Ai Api エラー')
         print(f'Error occurred: {e}')
@@ -41,7 +41,7 @@ def run(request):
 
     # 問い合わせ情報をラインに返信
     try:
-        line_service.send_reply_to_line(line_event['replyToken'], ai_response)
+        line_service.send_reply_to_line(line_event['replyToken'], ai_response.node.metadata['answer'])
         return json.dumps(ai_response), 200
     except Exception as e:
         print('Line Api エラー')
