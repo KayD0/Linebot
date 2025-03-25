@@ -6,7 +6,6 @@
 
 - **main.tf**: メインのTerraform設定ファイル。リソースの定義が含まれています。
 - **variables.tf**: 変数の定義ファイル。プロジェクトで使用される変数が含まれています。
-- **outputs.tf**: 出力値の定義ファイル。適用後に出力される値が含まれています。
 
 ## 前提条件
 
@@ -24,24 +23,34 @@
     git clone https://github.com/KayD0/Linebot.git
     cd Linebot/terraform
     ```
-2. Google Cloud Shellにアプロード
+2. variable.tfに変数を入力する
+  - `project_id`
+    - 作成したプロジェクトのプロジェクトIDを入力
+  - `line_channel_secret`
+    - ラインチャネルシークレットを入力
+  - `line_access_token`
+    - ラインアクセストークンを入力
+  - `openai_api_key`
+    - OpenAI APIキーを入力
+
+3. Google Cloud Shellにアプロード
   - zipper_{app}.ps1を使ってプロジェクトをzip化する
-    - functions/bot
-    - functions/embeddings
+    - src/functions/bot
+    - src/functions/embeddings
   - zip化したファイルを以下に格納し、Google Cloud Shellにアップロード
     - terraform/{env}
 
-3. Terraformを初期化します:
+4. Terraformを初期化します:
     ```sh
     terraform init
     ```
 
-4. Terraformプランを作成します:
+5. Terraformプランを作成します:
     ```sh
     terraform plan
     ```
 
-5. Terraformを適用してインフラストラクチャを構築します:
+6. Terraformを適用してインフラストラクチャを構築します:
     ```sh
     terraform apply
     ```

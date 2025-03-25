@@ -13,13 +13,13 @@ variable "app_name_prefix" {
 variable "labels" {
   type        = string
   description = "ラベル"
-  default     = "stg-linebot"
+  default     = "prod-linebot"
 }
 
 variable "project_id" {
   type        = string
   description = "プロジェクトID"
-  default     = "freelance-federation"
+  default     = "prod-{作成したプロジェクトのプロジェクトIDを入力}"
 }
 
 variable "location" {

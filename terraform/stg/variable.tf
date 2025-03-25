@@ -20,7 +20,7 @@ variable "labels" {
 variable "project_id" {
   type        = string
   description = "プロジェクトID"
-  default     = "freelance-federation"
+  default     = "stg-{作成したプロジェクトのプロジェクトIDを入力}"
 }
 
 variable "location" {
