@@ -4,6 +4,7 @@ import json
 from services.line_service import LineService
 from services.llama_service import LlamaService
 from services.storage_service import StorageService
+from services.message_filter_service import MessageFilterService
 
 @functions_framework.http
 def run(request):
@@ -20,6 +21,12 @@ def run(request):
     # ラインイベント、ユーザーのメッセージを取得
     line_event = json.loads(body)['events'][0]
     user_message = line_event['message']['text']
+
+    # メッセージフィルタリング
+    message_filter_service = MessageFilterService()
+    if not message_filter_service.validate(user_message):
+        print('フィルタリングされたメッセージです。')
+        return json.dumps({'message': 'Filtered'}), 200
 
     # 生成AIに問い合わせ
     ai_response = ""
